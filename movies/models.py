@@ -21,7 +21,7 @@ class Category(models.Model):
 
 
 class Actor(models.Model):
-    "Актеры и режиссеры"
+    """Актеры и режиссеры"""
     name = models.CharField("Имя", max_length=100)
     age = models.PositiveSmallIntegerField("Возраст", default=0)
     description = models.TextField("Описание")
@@ -39,7 +39,7 @@ class Actor(models.Model):
 
 
 class Genre(models.Model):
-    "Жанр"
+    """Жанр"""
     name = models.CharField("Имя", max_length=150)
     description = models.TextField("Описание")
     url = models.SlugField(max_length=160, unique=True)
@@ -53,7 +53,7 @@ class Genre(models.Model):
 
 
 class Movie(models.Model):
-    "Фильм"
+    """Фильм"""
     title = models.CharField("Название", max_length=100)
     tagline = models.CharField("Слоган", max_length=100, default='')
     description = models.TextField("Описание")
@@ -75,6 +75,7 @@ class Movie(models.Model):
                                                    )
     category = models.ForeignKey(Category, verbose_name="Категория", on_delete=models.SET_NULL, null=True)
     url = models.SlugField(max_length=130, unique=True)
+    draft = models.BooleanField("Черновик", default=False)
 
     def __str__(self):
         return self.title
@@ -128,3 +129,37 @@ class Rating(models.Model):
     class Meta:
         verbose_name = "Рейтинг"
         verbose_name_plural = "Рейтинги"
+
+
+class Reviews(models.Model):
+    """Отзывы"""
+    email = models.EmailField()
+    name = models.CharField("Имя", max_length=100)
+    text = models.TextField("Сообщение", max_length=5000)
+    parent = models.ForeignKey('self', verbose_name="Родитель", on_delete=models.SET_NULL, blank=True, null=True)
+    movie = models.ForeignKey(Movie, verbose_name="Фильм", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.name} - {self.movie}"
+
+    class Meta:
+        verbose_name = "Отзыв"
+        verbose_name_plural = "Отзывы"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
