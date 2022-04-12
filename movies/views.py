@@ -30,6 +30,7 @@ class MovieView(ListView):
 
 class MovieDetailView(DetailView):
     model = Movie
+    template_name = 'movies/movie_details.html'
     slug_field = "url" # если бы поле модели назыв. slug, то переопределять не нужно, также и с pk эта строка не нужна
 
     def get_context_data(self, **kwargs):
