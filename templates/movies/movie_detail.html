@@ -1,29 +1,6 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <!-- //Meta tag Keywords -->
-    <title>Clack Website Template</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- //Meta tag Keywords -->
-    <!-- Custom-Files -->
-    <link rel="stylesheet" href="./bundles/css/bootstrap.css">
-    <!-- Bootstrap-Core-CSS -->
-    <!--/ Style-CSS -->
-    <link rel="stylesheet" href="./bundles/css/style.css" type="text/css" media="all">
-    <!--// Style-CSS -->
-    <!-- font-awesome-icons -->
-    <link href="./bundles/css/font-awesome.css" rel="stylesheet">
-    <!-- //font-awesome-icons -->
-    <!-- /Fonts -->
-    <link href="//fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700"
-          rel="stylesheet">
-    <link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:200,200i,300,300i,400,400i,600,600i,700,700i,900"
-          rel="stylesheet">
-    <!-- //Fonts -->
-</head>
+{% extends 'base.html' %}
 
-<body>
+{% block content %}
 
 <div id="page" class="page">
     <div class="main-banner inner bg bg1" id="home">
@@ -65,6 +42,13 @@
             </div>
         </header>
     </div>
+
+
+
+
+
+
+
     <!--//main-content-->
     <!---->
     <ol class="breadcrumb editContent">
@@ -78,6 +62,8 @@
     </ol>
     <!---->
     <!-- banner -->
+
+
     <section class="ab-info-main py-md-5 py-4 editContent"
              style="outline: none; outline-offset: -2px; cursor: inherit; color: rgb(33, 37, 41); font-size: 16px; background-color: rgba(0, 0, 0, 0); font-family: Lato, sans-serif;">
         <div class="container py-md-3">
@@ -331,7 +317,7 @@
                 <div class="left-ads-display col-lg-8">
                     <div class="row">
                         <div class="desc1-left col-md-6">
-                            <img src="bundles/images/images.jpeg" class="img-fluid" alt="">
+                            <img src="{{ movie.poster.url }}" class="img-fluid" alt="">
                         </div>
                         <div class="desc1-right col-md-6 pl-lg-4">
                             <h3 class="editContent" style="outline: none; cursor: inherit;">
@@ -367,10 +353,24 @@
                                 <li style="list-style: none">
                                     <span><b>Бюджет:</b> {{movie.budjet}}</span></li>
                                 <li style="list-style: none">
-                                    <span><b>Сборы в США:</b> {{fees_in_usa}}</span></li>
-                                <li style="list-style: none"><span><b>Сборы в мире:</b> {{fees_in_world}}</span>
+                                    <span><b>Сборы в США:</b> {{movie.fees_in_usa}}</span></li>
+                                <li style="list-style: none"><span><b>Сборы в мире:</b> {{movie.fees_in_world}}</span>
                                 </li>
                                 <li style="list-style: none">
+                                    <form action="{% url 'add_rating' %}" method="post" name="rating">
+                                        <b>Рейтинг:</b>
+                                        {% csrf_token %}
+
+                                        <input type="hidden" value="{{ movie.id }}" name="movie">
+                                        <span class="rating">
+                                            {% for k,v in star_form.fields.star.choices %}
+                                            <input id="rating{{v}}" type="radio" name="star"
+                                                value="{{k}}">
+                                            <label for="rating{{v}}">{{k}}</label>
+                                            {% endfor %}
+                                        </span>
+                                        <span class="editContent">4.0</span>
+                                    </form>
                                     <a href="#"><b>Рейтинг:</b>
                                     <span class="fa fa-star" aria-hidden="true"
                                           style="outline: none; cursor: inherit;"></span>
@@ -534,6 +534,12 @@
             </div>
         </div>
     </section>
+
+
+
+
+
+
     <!-- //contact -->
     <!-- footer -->
     <footer class="editContent">
@@ -696,4 +702,4 @@
         </div>
     </div>
 </div>
-</body>
+{% endblock %}
