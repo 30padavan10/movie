@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView
 from django.views.generic.base import View
 
@@ -37,6 +37,15 @@ class MovieDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['star_form'] = RatingForm()
         return context
+
+
+class AddReview(View):
+    """Отзывы"""
+    def post(self, request, pk):
+        print(request.POST)
+        return redirect("/")
+
+
 
 class AddStarRating(View):
     """Добавление рейтинга фильму"""
