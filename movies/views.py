@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView
 from django.views.generic.base import View
 
-from .forms import RatingForm
+from .forms import RatingForm, ReviewForm
 
 from .models import Movie, Rating
 
@@ -42,8 +42,20 @@ class MovieDetailView(DetailView):
 class AddReview(View):
     """Отзывы"""
     def post(self, request, pk):
-        print(request.POST)
-        return redirect("/")
+        #print(request.POST)
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            # тут form это еще html текст. При вызове метода save создается объект формы
+            form = form.save(commit=False)  # чтобы форма сразу не сохранялась нужен параметр commit=False
+            # теперь form это объект и с ней можно работать
+            # form.movie_id = pk  # в бд поле которое хранит значение связанной модели называется movie_id поэтому
+            # можно обращаться напрямую к нему
+            if request.POST.get('parent', None):
+                form.parent_id = int(request.POST.get('parent'))
+            movie = Movie.objects.get(pk=pk)
+            form.movie = movie
+            form.save()
+        return redirect(movie.get_absolute_url())
 
 
 
