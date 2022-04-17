@@ -1,19 +1,148 @@
+from django import forms
 from django.contrib import admin
+
+from django.utils.safestring import mark_safe
+
 
 from .models import Actor, Category, Genre, Movie, Reviews, Rating, Rating_star, MovieShots
 
+
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
+
+class MovieAdminForm(forms.ModelForm):
+    description = forms.CharField(label='Описание', widget=CKEditorUploadingWidget())
+
+    class Meta:
+        model = Movie
+        fields = '__all__'
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    """Категории админки"""
+    list_display = ("id", "name", "url")  # ссылкой является первое поле, чтобы изменить - указать list_display_links
+    list_display_links = ("name",)
 
 @admin.register(Rating)
 class RatingAdmin(admin.ModelAdmin):
     """Рейтинг"""
     list_display = ("star", "movie", "ip")
 
-admin.site.register(Actor)
-admin.site.register(Category)
+@admin.register(Actor)
+class ActorAdmin(admin.ModelAdmin):
+    #list_display = ("name", "age", "image")  # поле image отображается как ссылка на картинку, а не картинка
+    list_display = ("name", "age", "get_image")
+    readonly_fields = ("get_image",)  # добавляет поле get_image на страницу редактирования объекта
+
+    def get_image(self, obj):
+        return mark_safe(f'<img src={obj.image.url} width="50" heigth="60"')
+        # mark_safe выводит изображение не как строку, а как тэг
+
+    get_image.short_description = "Изображение"  # меняет название столбца с get_image на Изображение
+
+
+#admin.site.register(Actor)
+# admin.site.register(Category, CategoryAdmin) меняется на @admin.register(Category)
 admin.site.register(Genre)
-admin.site.register(Movie)
-admin.site.register(Reviews)
+
+
+class ReviewInline(admin.StackedInline):  # TabularInline - суть таже, оформление другое
+    model = Reviews
+    extra = 1
+    readonly_fields = ("name", "email")
+
+
+class MoviesShotsInline(admin.TabularInline):
+    model = MovieShots
+    extra = 1
+    readonly_fields = ("get_image",)  # добавляет поле get_image на страницу редактирования объекта
+
+    def get_image(self, obj):
+        return mark_safe(f'<img src={obj.image.url} width="110" heigth="100"')
+        # mark_safe выводит изображение не как строку, а как тэг
+
+    get_image.short_description = "Изображение"
+
+@admin.register(Movie)
+class MovieAdmin(admin.ModelAdmin):
+    list_display = ("title", "category", "url", "draft")
+    list_filter = ("category", "year")  # добавляет фильтр по данным полям
+    search_fields = ("title", "category__name")  # поиск по полям
+    save_on_top = True
+    save_as = True  # добавляется кнопка сохранить как новый объект, т.е. позволяет использовать какой-либо объект
+    # как шаблон
+    list_editable = ("draft",)  # позволяет редактировать draft из списка фильмов
+    inlines = [ReviewInline, MoviesShotsInline]
+    readonly_fields = ("get_image",)
+    form = MovieAdminForm
+
+    #fields = (("actors", "directors", "genres"),)  # выводит указанные поля в строку, но при этом остальные поля
+    # если есть недоступны для редактирования
+    fieldsets = (  # также как и fields позволяет группировать поля
+        (None, {
+            "fields": (("title", "tagline"),)
+            }
+        ),
+        (None, {
+            "fields": ("description", ("poster", "get_image"))
+            }
+         ),
+        (None, {
+            "fields": (("year", "country"),)
+        }
+         ),
+        (None, {
+            "fields": (("actors", "directors", "genres"),)
+        }
+         ),
+        ("Касса", {
+            "classes": ("collapse",),                            # Позволяет группу сворачивать, обязательно нужно
+                                                                 # название
+            "fields": (("world_premiere", "budjet", "fees_in_usa"),)
+        }
+         ),
+        ("Опции", {                                             # "Опции" добавляет заголовок для полей
+            "fields": (("fees_in_world", "category", "url"),)
+        }
+         ),
+    )
+
+    def get_image(self, obj):
+        return mark_safe(f'<img src={obj.poster.url} width="110" heigth="100"')
+        # в данной модели поле ImageField называется poster, поэтому обращаемся к obj.poster
+        # а в модели MovieShots поле ImageField называется image, поэтому там obj.image
+
+    get_image.short_description = "Постер"
+
+
+
+#admin.site.register(Movie)
+
+
+@admin.register(Reviews)
+class ReviewsAdmin(admin.ModelAdmin):
+    list_display = ("name", "email", "parent", "movie", "id")
+    readonly_fields = ("name", "email")  # закрыть поля от редактирования в админке
+    inlines = [ReviewInline]  # требует класс ReviewInline, нужен чтобы при редактировании отзыва
+                              # показывались остальные отзывы к этому фильму
+
+#admin.site.register(Reviews)
 
 #admin.site.register(Rating)
 admin.site.register(Rating_star)
-admin.site.register(MovieShots)
+
+@admin.register(MovieShots)
+class MovieShotsAdmin(admin.ModelAdmin):
+    list_display = ("title", "movie", "get_image")
+    readonly_fields = ("get_image",)  # добавляет поле get_image на страницу редактирования объекта
+
+    def get_image(self, obj):
+        return mark_safe(f'<img src={obj.image.url} width="50" heigth="60"')
+        # mark_safe выводит изображение не как строку, а как тэг
+
+    get_image.short_description = "Изображение"
+
+#admin.site.register(MovieShots)
+
+admin.site.site_title = "Django Movies"   # добавляем Django Movies в название вкладки
+admin.site.site_header = "Django Movies"  # меняем заголовок админки
