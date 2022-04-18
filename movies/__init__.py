@@ -1,1 +1,1 @@
-#default_app_config = 'movies.apps.MoviesConfig' # не понял зачем, на момент написание все работало и без этого
+default_app_config = 'movies.apps.MoviesConfig' # не понял зачем, на момент написание все работало и без этого

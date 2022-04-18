@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib import admin
 
+
 from django.utils.safestring import mark_safe
 
 
@@ -75,6 +76,7 @@ class MovieAdmin(admin.ModelAdmin):
     inlines = [ReviewInline, MoviesShotsInline]
     readonly_fields = ("get_image",)
     form = MovieAdminForm
+    actions = ['publish', 'unpublish']  # добавляют действие которое можно выполнять со всеми выбранными записями
 
     #fields = (("actors", "directors", "genres"),)  # выводит указанные поля в строку, но при этом остальные поля
     # если есть недоступны для редактирования
@@ -112,7 +114,33 @@ class MovieAdmin(admin.ModelAdmin):
         # в данной модели поле ImageField называется poster, поэтому обращаемся к obj.poster
         # а в модели MovieShots поле ImageField называется image, поэтому там obj.image
 
+    def unpublish(self, request, queryset):
+        """Снять с публикации"""
+        row_update = queryset.update(draft=True)
+        if row_update == '1':
+            message_bit = "1 запись была обновлена"
+        else:
+            message_bit = f"{row_update} записей были обновлены"
+        self.message_user(request, f"{message_bit}")
+
+    def publish(self, request, queryset):
+        """Опубликовано"""
+        row_update = queryset.update(draft=False)
+        if row_update == 1:
+            message_bit = "1 запись была обновлена"
+        else:
+            message_bit = f"{row_update} записей были обновлены"
+        self.message_user(request, f"{message_bit}")
+
+    publish.short_description = "Опубликовать"
+    publish.allowed_permission = ('change',)  # чтобы применять action у пользователя должны быть права на измен записи
+
+    unpublish.short_description = "Снять с публикации"
+    unpublish.allowed_permission = ('change',)
+
     get_image.short_description = "Постер"
+
+
 
 
 

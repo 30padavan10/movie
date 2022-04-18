@@ -37,9 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'ckeditor_uploader',
     'ckeditor',
-
+    'ckeditor_uploader',
     #'rest_framework',
     'movies',
 ]
@@ -90,7 +89,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'movie',
         'USER': 'postgres',
-        'PASSWORD': '123456',#'qaz',
+        'PASSWORD': 'qaz', #'123456'
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -134,7 +133,8 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [STATIC_DIR]
-#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')  # вкл STATIC_ROOT, выкл STATICFILES_DIRS, DEBUG ставим False
+# выполняем collectstatic, возвращаем обратно
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -145,6 +145,12 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 CKEDITOR_UPLOAD_PATH = 'uploads/'
+
+
+# для плагина youtube скачиваем с https://ckeditor.com/cke4/addon/youtube
+# складываем все в папку youtube
+# папку youtube кладем в static/ckeditor/ckeditor/plugins
+# при наличии плагина в CKEDITOR_CONFIGS, но отсутствии в папке plugins ckeditor в админке не отображается
 
 CKEDITOR_CONFIGS = {
     'default': {

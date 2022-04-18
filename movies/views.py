@@ -5,7 +5,7 @@ from django.views.generic.base import View
 
 from .forms import RatingForm, ReviewForm
 
-from .models import Movie, Rating
+from .models import Movie, Rating, Category
 
 
 # class MovieView(View):
@@ -19,8 +19,13 @@ class MovieView(ListView):
     queryset = Movie.objects.filter(draft=False)
     template_name = 'movies/movies.html'
 
+    # def get_context_data(self, *args, **kwargs):            # чтобы выводить категории на каждой странице потребуется
+    #     context = super().get_context_data(*args, **kwargs) # дублировать данный метод на каждую страницу, обойти
+    #     context["categories"] = Category.objects.all()      # это можно либо созданием миксина или использовать
+    #     return context                                      # simple_tag, будет показан пример с simple_tag
 
 
+    
 # class MovieDetailView(View):
 #     """Подробная информация"""
 #     def get(self, request, slug):
