@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView
@@ -5,8 +6,19 @@ from django.views.generic.base import View
 
 from .forms import RatingForm, ReviewForm
 
-from .models import Movie, Rating, Category
+from .models import Movie, Rating, Category, Actor, Genre
 
+
+class GenreYears:
+    """Жанры и года выхода фильмов как альтернатива методу get_context_data"""
+    def get_genres(self):
+        return Genre.objects.all()
+
+    def get_years(self):
+        return Movie.objects.filter(draft=False).values("year")  # берем не все поля экземпляра, а только поле year
+    # если использовать values("year") - выводится словать {'year': 1989}
+    # в шаблоне обращаемся не напрямую к year, а как <переменная в for>.year
+    # если использовать values_list("year") - выводится кортеж (1989,)
 
 # class MovieView(View):
 #     """Список фильмов"""
@@ -14,7 +26,7 @@ from .models import Movie, Rating, Category
 #         movies = Movie.objects.all()
 #         return render(request, 'movies/movies.html', {'movie_list': movies})
 
-class MovieView(ListView):
+class MovieView(GenreYears, ListView):
     model = Movie
     queryset = Movie.objects.filter(draft=False)
     template_name = 'movies/movies.html'
@@ -87,10 +99,23 @@ class AddStarRating(View):
             return HttpResponse(status=400)
 
 
+class ActorView(GenreYears, DetailView):
+    """Информация об актере"""
+    model = Actor
+    template_name = 'movies/actor.html'
+    slug_field = "name"
 
 
+class FilterMovieView(GenreYears, ListView):
+    """Фильтр фильмов"""
+    template_name = "movies/movies.html"
 
-
+    def get_queryset(self):
+        queryset = Movie.objects.filter(
+            Q(year__in=self.request.GET.getlist("year")) |
+            Q(genres__in=self.request.GET.getlist("genre"))
+        )
+        return queryset
 
 
 
