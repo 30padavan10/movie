@@ -1,5 +1,5 @@
 from django.db.models import Q
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView
 from django.views.generic.base import View
@@ -30,6 +30,15 @@ class MovieView(GenreYears, ListView):
     model = Movie
     queryset = Movie.objects.filter(draft=False)
     template_name = 'movies/movies.html'
+    # context ListView будет состоять из {
+    # 'paginator': None,
+    # 'page_obj': None,
+    # 'is_paginated': False,
+    # 'object_list': <QuerySet [<Movie: Терминатор 2>, <Movie: Терминатор>]>,
+    # 'movie_list': <QuerySet [<Movie: Терминатор 2>, <Movie: Терминатор>]>,
+    #  'view': <movies.views.MovieView object at 0x0000025DABB5B910>
+    #  }
+    # при добавлении наследования GenreYears можно вызывать методы этого класса в шаблоне через параметр 'view'
 
     # def get_context_data(self, *args, **kwargs):            # чтобы выводить категории на каждой странице потребуется
     #     context = super().get_context_data(*args, **kwargs) # дублировать данный метод на каждую страницу, обойти
@@ -52,6 +61,11 @@ class MovieDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        # context DetailView состоит из {
+        # 'object': <Movie: Терминатор 2>,
+        # 'movie': <Movie: Терминатор 2>,
+        # 'view': <movies.views.MovieDetailView object at 0x000001EE2C664880>
+        # }
         context['star_form'] = RatingForm()
         return context
 
@@ -117,6 +131,19 @@ class FilterMovieView(GenreYears, ListView):
         )
         return queryset
 
+
+class JsonFilterMoviesView(ListView):
+    """Фильтр фильмов в json"""
+    def get_queryset(self):
+        queryset = Movie.objects.filter(
+            Q(year__in=self.request.GET.getlist("year")) |
+            Q(genres__in=self.request.GET.getlist("genre"))
+        ).distinct().values("title", "tagline", "url", "poster")  # distinct исключает повторение
+        return queryset
+
+    def get(self, request, *args, **kwargs):  # при вызове метода get
+        queryset = list(self.get_queryset())    # вызываем метод get_queryset и оборачиваем в список
+        return JsonResponse({"movies": queryset}, safe=False)  # с помощью JsonResponse передаем этот список
 
 
 

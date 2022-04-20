@@ -1,36 +1,36 @@
 function ajaxSend(url, params) {
     // Отправляем запрос
-    fetch(`${url}?${params}`, {
+    fetch(`${url}?${params}`, {   //выстраиваем заголовок
         method: 'GET',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
     })
-        .then(response => response.json())
-        .then(json => render(json))
-        .catch(error => console.error(error))
+        .then(response => response.json()) // полученный ответ от сервера преобразуем в json
+        .then(json => render(json))         // json передаем в функцию render
+        .catch(error => console.error(error))  // если произойдет ошибка выведем в консоль
 }
 
 // Filter movies
-const forms = document.querySelector('form[name=filter]');
+const forms = document.querySelector('form[name=filter]');  // ищем форму с именем filter
 
-forms.addEventListener('submit', function (e) {
+forms.addEventListener('submit', function (e) {  // когда будет запущен submit выполняем функцию
     // Получаем данные из формы
-    e.preventDefault();
-    let url = this.action;
-    let params = new URLSearchParams(new FormData(this)).toString();
-    ajaxSend(url, params);
+    e.preventDefault();      // блокируем дефолтное поведение формы по отправке данных
+    let url = this.action;      // переменной url присваиваем значение параметра action нашей формы
+    let params = new URLSearchParams(new FormData(this)).toString();  // берем все данные формы и преобразовываем в строку
+    ajaxSend(url, params);  // передаем параметры в ajaxSend
 });
 
-function render(data) {
+function render(data) {     //принимает json
     // Рендер шаблона
-    let template = Hogan.compile(html);
-    let output = template.render(data);
+    let template = Hogan.compile(html);  // с помощью библиотеки Hogan компилируем html, html это переменная ниже
+    let output = template.render(data);  // Рендерим полученный шаблон со всей вставленной информацией
 
-    const div = document.querySelector('.left-ads-display>.row');
-    div.innerHTML = output;
+    const div = document.querySelector('.left-ads-display>.row');  // находим див в который вставляются блоки с фильмами
+    div.innerHTML = output;  // и вставляем в него полученный результат
 }
-
+// в цикл {{#movies}} вставлен кусок html кода для отображения одного фильма
 let html = '\
 {{#movies}}\
     <div class="col-md-4 product-men">\
