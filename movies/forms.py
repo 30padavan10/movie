@@ -5,6 +5,7 @@ from django import forms
 class RatingForm(forms.ModelForm):
     """Форма добавления рейтинга"""
     star = forms.ModelChoiceField(queryset=Rating_star.objects.all(), widget=forms.RadioSelect(), empty_label=None)
+    # чтобы выводить список доступных звезд переопределяем поле star
 
     class Meta:
         model = Rating

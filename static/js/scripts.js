@@ -61,11 +61,11 @@ let html = '\
 
 
 // Add star rating
-const rating = document.querySelector('form[name=rating]');
+const rating = document.querySelector('form[name=rating]');  // ищем форму с именем rating
 
-rating.addEventListener("change", function (e) {
+rating.addEventListener("change", function (e) {  // когда у формы выполнится событие change
     // Получаем данные из формы
-    let data = new FormData(this);
+    let data = new FormData(this);  // создаем новую форму и передаем в нашу форму с методом POST
     fetch(`${this.action}`, {
         method: 'POST',
         body: data

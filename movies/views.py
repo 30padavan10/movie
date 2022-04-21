@@ -26,6 +26,7 @@ class GenreYears:
 #         movies = Movie.objects.all()
 #         return render(request, 'movies/movies.html', {'movie_list': movies})
 
+
 class MovieView(GenreYears, ListView):
     model = Movie
     queryset = Movie.objects.filter(draft=False)

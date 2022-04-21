@@ -124,7 +124,7 @@ class Rating(models.Model):
     movie = models.ForeignKey(Movie, verbose_name="Фильм", on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.title
+        return f"{self.star} - {self.movie}"
 
     class Meta:
         verbose_name = "Рейтинг"
