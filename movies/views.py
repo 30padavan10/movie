@@ -31,6 +31,7 @@ class MovieView(GenreYears, ListView):
     model = Movie
     queryset = Movie.objects.filter(draft=False)
     template_name = 'movies/movies.html'
+    paginate_by = 1
     # context ListView будет состоять из {
     # 'paginator': None,
     # 'page_obj': None,
@@ -46,7 +47,7 @@ class MovieView(GenreYears, ListView):
     #     context["categories"] = Category.objects.all()      # это можно либо созданием миксина или использовать
     #     return context                                      # simple_tag, будет показан пример с simple_tag
 
-
+from django.core.paginator import Paginator
     
 # class MovieDetailView(View):
 #     """Подробная информация"""
@@ -124,6 +125,8 @@ class ActorView(GenreYears, DetailView):
 class FilterMovieView(GenreYears, ListView):
     """Фильтр фильмов"""
     template_name = "movies/movies.html"
+    paginate_by = 2  # чтобы пагинация работала и при поиске фильмов, значение может отличаться от значения в MovieView
+                     # т.к. пагинация применяется к представлению, а не к html станице
 
     def get_queryset(self):
         queryset = Movie.objects.filter(
@@ -131,6 +134,17 @@ class FilterMovieView(GenreYears, ListView):
             Q(genres__in=self.request.GET.getlist("genre"))
         )
         return queryset
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        # в self.request.GET содержится QueryDict
+        # <QueryDict: {'genre': ['2'], 'year': ['1991', '1984']}>
+        # с помощью getlist("year") формируем строчку из годов и подставляем в переменную year
+        # которая в шаблоне будет формировать урл. Если значение пустое, то это ничего не сломает
+        context["year"] = ''.join([f'year={x}&' for x in self.request.GET.getlist("year")])
+        # тоже самое для жанров
+        context["genre"] = ''.join([f'genre={x}&' for x in self.request.GET.getlist("genre")])
+        return context
 
 
 class JsonFilterMoviesView(ListView):
@@ -148,5 +162,15 @@ class JsonFilterMoviesView(ListView):
 
 
 
+class Search(ListView):
+    """Поиск фильмов"""
+    template_name = "movies/movies.html"
+    paginate_by = 1
 
+    def get_queryset(self):
+        return Movie.objects.filter(title__icontains=self.request.GET.get("q"))
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context["q"] = f'q={self.request.GET.get("q")}&'
+        return context

@@ -1,26 +1,26 @@
-function ajaxSend(url, params) {
-    // Отправляем запрос
-    fetch(`${url}?${params}`, {   //выстраиваем заголовок
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-    })
-        .then(response => response.json()) // полученный ответ от сервера преобразуем в json
-        .then(json => render(json))         // json передаем в функцию render
-        .catch(error => console.error(error))  // если произойдет ошибка выведем в консоль
-}
+//function ajaxSend(url, params) {
+//    // Отправляем запрос
+//    fetch(`${url}?${params}`, {   //выстраиваем заголовок
+//        method: 'GET',
+//        headers: {
+//            'Content-Type': 'application/x-www-form-urlencoded',
+//        },
+//    })
+//        .then(response => response.json()) // полученный ответ от сервера преобразуем в json
+//        .then(json => render(json))         // json передаем в функцию render
+//        .catch(error => console.error(error))  // если произойдет ошибка выведем в консоль
+//}
 
 // Filter movies
-const forms = document.querySelector('form[name=filter]');  // ищем форму с именем filter
-
-forms.addEventListener('submit', function (e) {  // когда будет запущен submit выполняем функцию
-    // Получаем данные из формы
-    e.preventDefault();      // блокируем дефолтное поведение формы по отправке данных
-    let url = this.action;      // переменной url присваиваем значение параметра action нашей формы
-    let params = new URLSearchParams(new FormData(this)).toString();  // берем все данные формы и преобразовываем в строку
-    ajaxSend(url, params);  // передаем параметры в ajaxSend
-});
+//const forms = document.querySelector('form[name=filter]');  // ищем форму с именем filter
+//
+//forms.addEventListener('submit', function (e) {  // когда будет запущен submit выполняем функцию
+//    // Получаем данные из формы
+//    e.preventDefault();      // блокируем дефолтное поведение формы по отправке данных
+//    let url = this.action;      // переменной url присваиваем значение параметра action нашей формы
+//    let params = new URLSearchParams(new FormData(this)).toString();  // берем все данные формы и преобразовываем в строку
+//    ajaxSend(url, params);  // передаем параметры в ajaxSend
+//});
 
 function render(data) {     //принимает json
     // Рендер шаблона

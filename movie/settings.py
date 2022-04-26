@@ -37,6 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'django.contrib.sites',       #  Нужны для вещей типа "о нас", "контакты" и т.д., чтоб можно было редактировать их
+    'django.contrib.flatpages',   #  из админки и не приходилось бы модели городить (модель - множество экземпляров, а
+                                  # эти странички уникальные).
+                                  # Если их сделать просто статичными страницами, то редактировать из админки нельзя.
     'ckeditor',
     'ckeditor_uploader',
     #'rest_framework',
@@ -51,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 ]
 
 ROOT_URLCONF = 'movie.urls'
@@ -218,3 +224,5 @@ CKEDITOR_CONFIGS = {
         ]),
     }
 }
+
+SITE_ID = 1
