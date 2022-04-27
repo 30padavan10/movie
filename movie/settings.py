@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'modeltranslation',     # pip install django-modeltranslation
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -53,6 +54,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',  # для мультиязычного сайта
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -97,7 +99,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'movie',
         'USER': 'postgres',
-        'PASSWORD': 'qaz', #'123456'
+        'PASSWORD': '123456', #'qaz'
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -130,7 +132,16 @@ LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
 
-USE_I18N = True
+USE_I18N = True    # для мультиязычного должно быть True
+
+gettext = lambda s: s
+LANGUAGES = (
+    ("ru", gettext("Russia")),
+    ("en", gettext("English")),
+)
+
+
+
 
 USE_TZ = True
 
