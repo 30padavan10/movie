@@ -1,2 +1,5 @@
-*.pyc
-/movie/__pycache__
+
+__pycache__/
+*/__pycache__/
+static/admin/
+static/ckeditor/

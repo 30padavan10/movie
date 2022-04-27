@@ -69,6 +69,7 @@ class MovieDetailView(DetailView):
         # 'view': <movies.views.MovieDetailView object at 0x000001EE2C664880>
         # }
         context['star_form'] = RatingForm()
+        context['form'] = ReviewForm()      # добавляется после того как добавляем в форму рекапчу
         return context
 
 

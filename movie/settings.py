@@ -44,8 +44,10 @@ INSTALLED_APPS = [
                                   # Если их сделать просто статичными страницами, то редактировать из админки нельзя.
     'ckeditor',
     'ckeditor_uploader',
+    #'snowpenguin.django.recaptcha3',  # pip install django-recaptcha3
     #'rest_framework',
     'movies',
+    'contact',
 ]
 
 MIDDLEWARE = [
@@ -226,3 +228,8 @@ CKEDITOR_CONFIGS = {
 }
 
 SITE_ID = 1
+# c джанго 4 не работает т.к нет 'ugettext_lazy' from 'django.utils.translation'
+# RECAPTCHA_PUBLIC_KEY = "6Lc4sd4UAAAAALspxT-nPg4MLtb0ZD9ikf_fVFvg" # ключ сайта
+# RECAPTCHA_PRIVATE_KEY = "6Lc4sd4UAAAAANY6KDjEa0z1fhAdUo9HyGxy06Lq"  # секретный ключ
+# RECAPTCHA_DEFAULT_ACTION = 'generic'
+# RECAPTCHA_SCORE_THRESHOLD = 0.5
