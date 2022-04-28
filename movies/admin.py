@@ -1,17 +1,19 @@
 from django import forms
 from django.contrib import admin
 
-
 from django.utils.safestring import mark_safe
-
 
 from .models import Actor, Category, Genre, Movie, Reviews, Rating, Rating_star, MovieShots
 
-
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
+from modeltranslation.admin import TranslationAdmin
+
+
 class MovieAdminForm(forms.ModelForm):
-    description = forms.CharField(label='Описание', widget=CKEditorUploadingWidget())
+    # description = forms.CharField(label='Описание', widget=CKEditorUploadingWidget()) # когда у нас 1 язык
+    description_ru = forms.CharField(label='Описание', widget=CKEditorUploadingWidget())
+    description_en = forms.CharField(label='Описание', widget=CKEditorUploadingWidget())
 
     class Meta:
         model = Movie
@@ -19,7 +21,7 @@ class MovieAdminForm(forms.ModelForm):
 
 
 @admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(TranslationAdmin):    # для мультиязычности наследуемся не от admin.ModelAdmin
     """Категории админки"""
     list_display = ("id", "name", "url")  # ссылкой является первое поле, чтобы изменить - указать list_display_links
     list_display_links = ("name",)
@@ -30,7 +32,7 @@ class RatingAdmin(admin.ModelAdmin):
     list_display = ("star", "movie", "ip")
 
 @admin.register(Actor)
-class ActorAdmin(admin.ModelAdmin):
+class ActorAdmin(TranslationAdmin):
     #list_display = ("name", "age", "image")  # поле image отображается как ссылка на картинку, а не картинка
     list_display = ("name", "age", "get_image")
     readonly_fields = ("get_image",)  # добавляет поле get_image на страницу редактирования объекта
@@ -44,7 +46,12 @@ class ActorAdmin(admin.ModelAdmin):
 
 #admin.site.register(Actor)
 # admin.site.register(Category, CategoryAdmin) меняется на @admin.register(Category)
-admin.site.register(Genre)
+
+@admin.register(Genre)
+class GenreAdmin(TranslationAdmin):
+    list_display = ("name", "url")
+
+#admin.site.register(Genre)
 
 
 class ReviewInline(admin.StackedInline):  # TabularInline - суть таже, оформление другое
@@ -65,7 +72,7 @@ class MoviesShotsInline(admin.TabularInline):
     get_image.short_description = "Изображение"
 
 @admin.register(Movie)
-class MovieAdmin(admin.ModelAdmin):
+class MovieAdmin(TranslationAdmin):
     list_display = ("title", "category", "url", "draft")
     list_filter = ("category", "year")  # добавляет фильтр по данным полям
     search_fields = ("title", "category__name")  # поиск по полям
@@ -160,7 +167,7 @@ class ReviewsAdmin(admin.ModelAdmin):
 admin.site.register(Rating_star)
 
 @admin.register(MovieShots)
-class MovieShotsAdmin(admin.ModelAdmin):
+class MovieShotsAdmin(TranslationAdmin):
     list_display = ("title", "movie", "get_image")
     readonly_fields = ("get_image",)  # добавляет поле get_image на страницу редактирования объекта
 

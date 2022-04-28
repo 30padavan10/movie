@@ -99,7 +99,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'movie',
         'USER': 'postgres',
-        'PASSWORD': '123456', #'qaz'
+        'PASSWORD': 'qaz', #'123456'
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -128,6 +128,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
+
+
+
 LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
@@ -140,7 +143,9 @@ LANGUAGES = (
     ("en", gettext("English")),
 )
 
-
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'locale'),
+)
 
 
 USE_TZ = True

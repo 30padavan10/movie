@@ -10,6 +10,7 @@ class CategoryTranslationOptions(TranslationOptions):
     # makemigrations и migrate
     # если проект новый этого достаточно, если уже существуют записи в БД, то еще выполнить
     # update_translation_fields
+    # для синхронизации полей
 
 
 @register(Actor)

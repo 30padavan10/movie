@@ -1,5 +1,6 @@
 
 {% extends 'movies/base.html' %}
+{% load static i18n %}
 {% block title %} {{ movie.title }} {% endblock title %}
 {% block container %}
     <div class="container py-md-3">
@@ -22,27 +23,27 @@
                 <h5 class="editContent"></h5>
                 <ul>
                     <li style="list-style: none">
-                        <span><b>Год:</b> {{ movie.year }}</span></li>
+                        <span><b>{% trans 'Год:' %}</b> {{ movie.year }}</span></li>
                     <li style="list-style: none">
-                        <span><b>Страна:</b> {{ movie.country }}</span>
+                        <span><b>{% trans 'Страна:' %}</b> {{ movie.country }}</span>
                     </li>
                     <li style="list-style: none">
-                        <span><b>Слоган:</b> {{ movie.tagline }}</span>
+                        <span><b>{% trans 'Слоган:'%}</b> {{ movie.tagline }}</span>
                     </li>
                     <li style="list-style: none">
-                                    <span><b>Режиссер:</b>
+                                    <span><b>{% trans 'Режиссер:' %}</b>
                                         {% for director in movie.directors.all %}
                                             <a href="{{ director.get_absolute_url }}">{{ director.name }}</a>
                                         {% endfor %}
                                     </span>
                     </li>
-                    <li style="list-style: none"><span><b>Актеры:</b>
+                    <li style="list-style: none"><span><b>{% trans 'Актеры:'%}</b>
                         {% for actor in movie.actors.all %}
                         <a href="{{ actor.get_absolute_url }}">{{ actor.name }}</a>
                         {% endfor %}
                                 </span>
                     </li>
-                    <li style="list-style: none"><span><b>Жанр:</b>
+                    <li style="list-style: none"><span><b>{% trans 'Жанр:'%}</b>
                         {% for genre in movie.genres.all %}
                             {{ genre.name }}
                         {% endfor %}
