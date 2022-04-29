@@ -50,12 +50,12 @@
                                     </span>
                     </li>
                     <li style="list-style: none">
-                        <span><b>Премьера в мире:</b> {{ movie.world_premiere }}</span>
+                        <span><b>{% trans 'Премьера в мире:' %}</b> {{ movie.world_premiere }}</span>
                     </li>
                     <li style="list-style: none">
-                        <span><b>Бюджет:</b> ${{ movie.budjet }}</span></li>
+                        <span><b>{% trans 'Бюджет:' %}</b> ${{ movie.budjet }}</span></li>
                     <li style="list-style: none">
-                        <span><b>Сборы в США:</b> ${{ movie.fees_in_usa }}</span></li>
+                        <span><b>{% trans 'Сборы в США:' %}</b> ${{ movie.fees_in_usa }}</span></li>
                     <li style="list-style: none">
                         <span><b>Сборы в мире:</b> ${{ movie.fees_in_world }}</span>
                     </li>

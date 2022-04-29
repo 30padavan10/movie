@@ -45,11 +45,36 @@ INSTALLED_APPS = [
                                   # Если их сделать просто статичными страницами, то редактировать из админки нельзя.
     'ckeditor',
     'ckeditor_uploader',
-    #'snowpenguin.django.recaptcha3',  # pip install django-recaptcha3
+    #'snowpenguin.django.recaptcha3',  # pip install django-recaptcha3   # не работает с django 4
     #'rest_framework',
     'movies',
     'contact',
+
+    'allauth',          # pip install django-allauth  # помимо этого в INSTALLED_APPS должны быть 'django.contrib.auth',
+    'allauth.account',  # 'django.contrib.sites', 'django.contrib.messages'
+                        # скопировать с https://github.com/pennersr/django-allauth/tree/master/allauth/templates/account
+                        # шаблоны страниц и добавить в темплейты
+
+    'allauth.socialaccount',                # если нужна авторизация через соц сеть
+    'allauth.socialaccount.providers.vk',   #
 ]
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',  # нужно выполнить manage.py migrate
+]
+
+
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1  # количество дней до подтверждения email
+ACCOUNT_USERNAME_MIN_LENGTH = 4             # минимальная длина логина
+LOGIN_REDIRECT_URL = "/"                    # при авторизации перенаправлять на главную
+
+EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'  # чтобы подтверждение фиктивно отправлялось
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -135,7 +160,7 @@ LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
 
-USE_I18N = True    # для мультиязычного должно быть True
+USE_I18N = True    # для мультиязычного должно быть True, если мультияз не нужна выставляем False, т.к по дефолту True
 
 gettext = lambda s: s
 LANGUAGES = (
@@ -143,9 +168,21 @@ LANGUAGES = (
     ("en", gettext("English")),
 )
 
+
+
 LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'locale'),
 )
+
+# для добавления в папку 'locale' файла django.po который будет содержать тэги trans из шаблонов нужно выполнить
+# django-admin makemessages -l en -e html
+# на windows появляется ошибка
+# CommandError: Can't find msguniq. Make sure you have GNU gettext tools 0.15 or newer installed.
+# решается скачиванием установщика https://mlocati.github.io/articles/gettext-iconv-windows.html
+# выбирал static, в процессе установки должна быть галочка добавить в переменные окружения.
+# после добавления переводов django.po
+# django-admin compilemessages
+
 
 
 USE_TZ = True
@@ -243,7 +280,8 @@ CKEDITOR_CONFIGS = {
     }
 }
 
-SITE_ID = 1
+SITE_ID = 1 # нужен как для рекапчи так и для allauth
+
 # c джанго 4 не работает т.к нет 'ugettext_lazy' from 'django.utils.translation'
 # RECAPTCHA_PUBLIC_KEY = "6Lc4sd4UAAAAALspxT-nPg4MLtb0ZD9ikf_fVFvg" # ключ сайта
 # RECAPTCHA_PRIVATE_KEY = "6Lc4sd4UAAAAANY6KDjEa0z1fhAdUo9HyGxy06Lq"  # секретный ключ

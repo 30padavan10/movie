@@ -1,0 +1,59 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-04-29 12:48+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\templates\include\footer.html:52
+msgid "Главная"
+msgstr "Main"
+
+#: .\templates\movies\movie_details.html:26
+msgid "Год:"
+msgstr "Year:"
+
+#: .\templates\movies\movie_details.html:28
+msgid "Страна:"
+msgstr "Country:"
+
+#: .\templates\movies\movie_details.html:31
+msgid "Слоган:"
+msgstr "Tagline:"
+
+#: .\templates\movies\movie_details.html:34
+msgid "Режиссер:"
+msgstr "Director:"
+
+#: .\templates\movies\movie_details.html:40
+msgid "Актеры:"
+msgstr "Actor:"
+
+#: .\templates\movies\movie_details.html:46
+msgid "Жанр:"
+msgstr "Genre:"
+
+#: .\templates\movies\movie_details.html:53
+msgid "Премьера в мире:"
+msgstr "World premiere"
+
+#: .\templates\movies\movie_details.html:56
+msgid "Бюджет:"
+msgstr "Budget:"
+
+#: .\templates\movies\movie_details.html:58
+msgid "Сборы в США:"
+msgstr "Fees in USA"
